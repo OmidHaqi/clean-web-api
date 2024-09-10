@@ -26,3 +26,10 @@ go.work.sum
 
 #Log file
 .log
+
+# vscode folder
+.vscode/
+
+# idea folder
+
+.idea/
