@@ -9,6 +9,6 @@ func Test(r *gin.RouterGroup) {
 
 	handler := handlers.NewTestHandler()
 
-	r.GET("/", handler.TestHandler)
+	r.POST("/user/:id", handler.TestHandler)
 
 }

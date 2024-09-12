@@ -6,6 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/omidhaqi/clean-web-api/api/routers"
 	"github.com/omidhaqi/clean-web-api/config"
+	"github.com/omidhaqi/clean-web-api/docs"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func InitServer() {
@@ -14,7 +18,9 @@ func InitServer() {
 
 	r := gin.New() //2
 
-	r.Use(gin.Logger(), gin.Recovery()) //3
+	r.Use(gin.Logger(), gin.Recovery())  
+
+    RegisterSwagger(r, cfg)
 
 	api := r.Group("/api")
 
@@ -35,5 +41,19 @@ func InitServer() {
 		r.Run(fmt.Sprintf(":%s", cfg.Server.InternalPort))
 
 	}
+
+
+
+
+}
+
+func RegisterSwagger(r *gin.Engine , cfg *config.Config){
+	docs.SwaggerInfo.Title = "clean web api"
+	docs.SwaggerInfo.Description = "a simple web api by Go and Gin framework"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.BasePath = "/api"
+	docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%s",cfg.Server.InternalPort)
+	docs.SwaggerInfo.Schemes = []string{"http"}
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
