@@ -7,6 +7,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: car_sale_db
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
@@ -20,8 +22,8 @@ services:
     image: dpage/pgadmin4
     container_name: pgadmin_container
     environment:
-      PGADMIN_DEFUALT_EMAIL: admin@admin.com
-      PGADMIN_DEFUALT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: postgres
+      PGADMIN_DEFAULT_PASSWORD: admin
     volumes:
       - pgadmin:/var/lib/pgadmin
     ports:
@@ -33,9 +35,10 @@ services:
       - postgres
 
   redis:
+    
     image: redis:latest
     container_name: redis_container
-    command: ["redis-server", "etc/redis/redis.conf"]
+    command: [ "redis-server", "/etc/redis/redis.conf" ]
     volumes:
       - ./redis/redis.conf:/etc/redis/redis.conf
       - redis:/etc/redis

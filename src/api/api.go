@@ -14,9 +14,9 @@ import (
 
 func InitServer() {
 
-	cfg := config.GetConfig() //1
+	cfg := config.GetConfig()
 
-	r := gin.New() //2
+	r := gin.New() 
 
 	r.Use(gin.Logger(), gin.Recovery())  
 

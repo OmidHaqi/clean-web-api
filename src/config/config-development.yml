@@ -46,4 +46,3 @@ jwt:
   refreshSecret: "mySecretKey"
   accessTokenExpireDuration: 1440
   refreshTokenExpireDuration: 60
-  

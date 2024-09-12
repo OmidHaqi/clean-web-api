@@ -2,10 +2,11 @@ package config
 
 import (
 	"errors"
-	"github.com/spf13/viper"
 	"log"
 	"os"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -20,9 +21,9 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	InternalPort string
-	ExternalPort string
-	RunMode      string
+	InternalPort    string
+	ExternalPort    string
+	RunMode string
 }
 
 type LoggerConfig struct {
@@ -92,10 +93,10 @@ func GetConfig() *Config {
 
 	cfg, err := ParseConfig(v)
 	envPort := os.Getenv("PORT")
-	if envPort != "" {
+	if envPort != ""{
 		cfg.Server.ExternalPort = envPort
 		log.Printf("Set external port from environment -> %s", cfg.Server.ExternalPort)
-	} else {
+	}else{
 		cfg.Server.ExternalPort = cfg.Server.InternalPort
 		log.Printf("Set external port from environment -> %s", cfg.Server.ExternalPort)
 	}
@@ -125,8 +126,7 @@ func LoadConfig(filename string, fileType string) (*viper.Viper, error) {
 	err := v.ReadInConfig()
 	if err != nil {
 		log.Printf("Unable to read config: %v", err)
-		var configFileNotFoundError viper.ConfigFileNotFoundError
-		if errors.As(err, &configFileNotFoundError) {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			return nil, errors.New("config file not found")
 		}
 		return nil, err
@@ -136,9 +136,9 @@ func LoadConfig(filename string, fileType string) (*viper.Viper, error) {
 
 func getConfigPath(env string) string {
 	if env == "docker" {
-		return "../config/config-docker"
+		return "/app/config/config-docker"
 	} else if env == "production" {
-		return "../config/config-production"
+		return "/config/config-production"
 	} else {
 		return "../config/config-development"
 	}
