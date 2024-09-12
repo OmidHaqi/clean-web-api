@@ -1,4 +1,3 @@
-version: '3.7'
 
 services:
   postgres:
@@ -7,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
-      POSTGRES_dB: car_sale_db
+      POSTGRES_DB: car_sale_db
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
@@ -39,10 +38,9 @@ services:
     command: ["redis-server", "etc/redis/redis.conf"]
     volumes:
       - ./redis/redis.conf:/etc/redis/redis.conf
-      - redis:/etc/redis.conf
-      - redis:/data
+      - redis:/etc/redis
     ports:
-      - "6379:6379"
+      - "6378:6379"
     networks:
       - webapi_network
 
