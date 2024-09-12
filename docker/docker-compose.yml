@@ -35,7 +35,6 @@ services:
       - postgres
 
   redis:
-    
     image: redis:latest
     container_name: redis_container
     command: [ "redis-server", "/etc/redis/redis.conf" ]
