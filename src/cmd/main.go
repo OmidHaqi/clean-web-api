@@ -2,6 +2,7 @@ package main
 
 import (
 	api "github.com/omidhaqi/clean-web-api/api"
+	"github.com/omidhaqi/clean-web-api/data/db/migrations"
 
 	"github.com/omidhaqi/clean-web-api/config"
 
@@ -31,6 +32,7 @@ func main() {
 	if err != nil {
 		logger.Fatal(logging.Postgres, logging.Startup, err.Error(), nil)
 	}
+	migrations.Up_1()
 	api.InitServer()
 
 }
