@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	api "github.com/omidhaqi/clean-web-api/api"
 
 	"github.com/omidhaqi/clean-web-api/config"
@@ -25,7 +23,7 @@ func main() {
 	err := cache.InitRedis(cfg)
 	defer cache.CloseRedis()
 	if err != nil {
-		log.Fatal(logging.Redis, logging.Startup, err.Error(), nil)
+		logger.Fatal(logging.Redis, logging.Startup, err.Error(), nil)
 	}
 
 	err = database.InitDb(cfg)

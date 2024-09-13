@@ -2,7 +2,6 @@ package logging
 
 import (
 	"fmt"
-	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,7 +12,6 @@ import (
 )
 
 var zapSinLogger *zap.SugaredLogger
-var once sync.Once
 type zapLogger struct {
 	cfg    *config.Config
 	logger *zap.SugaredLogger

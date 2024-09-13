@@ -2,10 +2,10 @@ package database
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/omidhaqi/clean-web-api/config"
+	"github.com/omidhaqi/clean-web-api/pkg/logging"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -14,7 +14,7 @@ var dbClient *gorm.DB
 
 func InitDb(cfg *config.Config) error {
 	var err error
-
+	logger := logging.NewLogger(cfg)
 	cnn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=Asia/Tehran",
 		cfg.Postgres.Host, cfg.Postgres.Port, cfg.Postgres.User, cfg.Postgres.Password,
 		cfg.Postgres.DbName, cfg.Postgres.SSLMode)
@@ -36,7 +36,7 @@ func InitDb(cfg *config.Config) error {
 	sqlDb.SetMaxOpenConns(cfg.Postgres.MaxOpenConns)
 	sqlDb.SetConnMaxLifetime(cfg.Postgres.ConnMaxLifetime * time.Minute)
 
-	log.Println("Db connection established")
+	logger.Infof("Db connection established")
 	return nil
 }
 
