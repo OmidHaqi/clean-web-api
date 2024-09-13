@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/omidhaqi/clean-web-api/api/middlewares"
 	"github.com/omidhaqi/clean-web-api/api/routers"
 	"github.com/omidhaqi/clean-web-api/config"
 	"github.com/omidhaqi/clean-web-api/docs"
@@ -18,7 +19,10 @@ func InitServer() {
 
 	r := gin.New() 
 
+	r.Use(middlewares.DefaultStructuredLogger(cfg))
+	r.Use(middlewares.Cors(cfg))
 	r.Use(gin.Logger(), gin.Recovery())  
+
 
     RegisterSwagger(r, cfg)
 
