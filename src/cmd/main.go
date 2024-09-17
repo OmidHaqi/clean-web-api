@@ -33,6 +33,6 @@ func main() {
 		logger.Fatal(logging.Postgres, logging.Startup, err.Error(), nil)
 	}
 	migrations.Up_1()
-	api.InitServer()
+	api.InitServer(cfg)
 
 }
