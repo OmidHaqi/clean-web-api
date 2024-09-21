@@ -13,9 +13,9 @@ import (
 )
 
 type OtpService struct {
-	logger logging.Logger
-	cfg    *config.Config
-	redisClient  *redis.Client
+	logger      logging.Logger
+	cfg         *config.Config
+	redisClient *redis.Client
 }
 
 type OtpDto struct {
@@ -35,10 +35,10 @@ func (s *OtpService) SetOtp(mobileNumber string, otp string) error {
 
 	res, err := cache.Get[OtpDto](s.redisClient, key)
 	if err == nil && !res.Used {
-		return &service_errors.ServiceError{EndUserMessage: service_errors.OtpExistsError}
+		return &service_errors.ServiceError{EndUserMessage: service_errors.OtpExists}
 
 	} else if err == nil && res.Used {
-		return &service_errors.ServiceError{EndUserMessage: service_errors.OtpUsedError}
+		return &service_errors.ServiceError{EndUserMessage: service_errors.OtpUsed}
 
 	}
 	err = cache.Set(s.redisClient, key, val, s.cfg.Otp.ExpireTime*time.Second)
@@ -56,13 +56,13 @@ func (s *OtpService) ValidateOtp(mobileNumber string, otp string) error {
 
 	if err != nil {
 		return err
-	} else if  res.Used {
-		return &service_errors.ServiceError{EndUserMessage: service_errors.OtpUsedError}
+	} else if res.Used {
+		return &service_errors.ServiceError{EndUserMessage: service_errors.OtpUsed}
 
-	} else if  !res.Used && res.Value != otp {
-		return &service_errors.ServiceError{EndUserMessage: service_errors.OtpNotValidError}
+	} else if !res.Used && res.Value != otp {
+		return &service_errors.ServiceError{EndUserMessage: service_errors.OtpNotValid}
 
-	} else if  !res.Used && res.Value == otp {
+	} else if !res.Used && res.Value == otp {
 		res.Used = true
 		err = cache.Set(s.redisClient, key, res, s.cfg.Otp.ExpireTime*time.Second)
 		if err != nil {

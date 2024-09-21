@@ -9,9 +9,9 @@ const (
 	TokenInvalid    = "token invalid"
 
 	// OTP
-	OtpExistsError   = "Otp exists"
-	OtpUsedError     = "Otp used"
-	OtpNotValidError = "Otp invalid"
+	OtpExists   = "Otp exists"
+	OtpUsed     = "Otp used"
+	OtpNotValid = "Otp invalid"
 
 	// User
 	EmailExists               = "Email exists"

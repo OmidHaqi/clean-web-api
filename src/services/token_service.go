@@ -37,8 +37,8 @@ func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetails, error)
 
 	td := &dto.TokenDetails{}
 
-	td.AccessTokenExpireTime = int(time.Now().Add(s.cfg.JWT.AccessTokenExpireDuration * time.Minute).Unix())
-	td.RefreshTokenExpireTime = int(time.Now().Add(s.cfg.JWT.RefreshTokenExpireDuration * time.Minute).Unix())
+	td.AccessTokenExpireTime = time.Now().Add(s.cfg.JWT.AccessTokenExpireDuration * time.Minute).Unix()
+	td.RefreshTokenExpireTime = time.Now().Add(s.cfg.JWT.RefreshTokenExpireDuration * time.Minute).Unix()
 
 	atc := jwt.MapClaims{}
 

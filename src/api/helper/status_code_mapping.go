@@ -7,19 +7,23 @@ import (
 )
 
 var StatusCodeMapping = map[string]int{
-	service_errors.OtpExistsError:   409,
-	service_errors.OtpUsedError:     409,
-	service_errors.OtpNotValidError: 409,
+
+	// OTP
+	service_errors.OtpExists:   409,
+	service_errors.OtpUsed:     409,
+	service_errors.OtpNotValid: 400,
+
+	// User
+	service_errors.EmailExists:      409,
+	service_errors.UsernameExists:   409,
+	service_errors.RecordNotFound:   404,
+	service_errors.PermissionDenied: 403,
 }
 
-func TranslateErrToStatusCode(err error) int {
-
-	value , ok := StatusCodeMapping[err.Error()]
-
+func TranslateErrorToStatusCode(err error) int {
+	value, ok := StatusCodeMapping[err.Error()]
 	if !ok {
-
 		return http.StatusInternalServerError
-		
 	}
 	return value
 }
