@@ -1,8 +1,7 @@
 package middlewares
+
 import (
 	"fmt"
-	"net/http"
-	"strings"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"github.com/omidhaqi/clean-web-api/api/helper"
@@ -10,14 +9,17 @@ import (
 	"github.com/omidhaqi/clean-web-api/constants"
 	"github.com/omidhaqi/clean-web-api/pkg/service_errors"
 	"github.com/omidhaqi/clean-web-api/services"
+	"net/http"
+	"strings"
 )
+
 func Authentication(cfg *config.Config) gin.HandlerFunc {
 	var tokenService = services.NewTokenService(cfg)
 
 	return func(c *gin.Context) {
 
 		var err error
-		
+
 		claimMap := map[string]interface{}{}
 		auth := c.GetHeader(constants.AuthorizationHeaderKey)
 		token := strings.Split(auth, " ")
