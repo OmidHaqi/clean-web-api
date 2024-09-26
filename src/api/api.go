@@ -20,22 +20,17 @@ import (
 
 var logger = logging.NewLogger(config.GetConfig())
 
-func InitServer( cfg *config.Config) {
-	
-	
+func InitServer(cfg *config.Config) {
 
-	r := gin.New() 
+	r := gin.New()
 
 	RegisterValidators()
 
 	r.Use(middlewares.DefaultStructuredLogger(cfg))
 	r.Use(middlewares.Cors(cfg))
-	r.Use(gin.Logger(), gin.Recovery())  
+	r.Use(gin.Logger(), gin.CustomRecovery(middlewares.ErrorHandler) /*middlewares.TestMiddleware()*/, middlewares.LimitByRequest())
 
-
-
-
-    RegisterSwagger(r, cfg)
+	RegisterSwagger(r, cfg)
 
 	RegisterRoutes(r, cfg)
 
@@ -45,9 +40,6 @@ func InitServer( cfg *config.Config) {
 	if err != nil {
 		logger.Fatal(logging.General, logging.Startup, err.Error(), nil)
 	}
-
-
-
 
 }
 
@@ -91,13 +83,12 @@ func RegisterValidators() {
 	}
 }
 
-func RegisterSwagger(r *gin.Engine , cfg *config.Config){
+func RegisterSwagger(r *gin.Engine, cfg *config.Config) {
 	docs.SwaggerInfo.Title = "clean web api"
 	docs.SwaggerInfo.Description = "a simple web api by Go and Gin framework"
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.BasePath = "/api"
-	docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%s",cfg.Server.InternalPort)
+	docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%s", cfg.Server.InternalPort)
 	docs.SwaggerInfo.Schemes = []string{"http"}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
-
