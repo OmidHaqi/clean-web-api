@@ -6,6 +6,7 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/omidhaqi/clean-web-api/api/dto"
 	"github.com/omidhaqi/clean-web-api/config"
+	"github.com/omidhaqi/clean-web-api/constants"
 	"github.com/omidhaqi/clean-web-api/pkg/logging"
 	"github.com/omidhaqi/clean-web-api/pkg/service_errors"
 )
@@ -41,15 +42,14 @@ func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetails, error)
 	td.RefreshTokenExpireTime = time.Now().Add(s.cfg.JWT.RefreshTokenExpireDuration * time.Minute).Unix()
 
 	atc := jwt.MapClaims{}
-
-	atc["user_id"] = token.UserId
-	atc["first_name"] = token.FirstName
-	atc["last_name"] = token.LastName
-	atc["username"] = token.UserName
-	atc["email"] = token.Email
-	atc["mobile_number"] = token.MobileNumber
-	atc["roles"] = token.Roles
-	atc["exp"] = td.AccessTokenExpireTime
+	atc[constants.UserIdKey] = token.UserId
+	atc[constants.FirstNameKey] = token.FirstName
+	atc[constants.LastNameKey] = token.LastName
+	atc[constants.UsernameKey] = token.UserName
+	atc[constants.EmailKey] = token.Email
+	atc[constants.MobileNumberKey] = token.MobileNumber
+	atc[constants.RolesKey] = token.Roles
+	atc[constants.ExpireTimeKey] = td.AccessTokenExpireTime
 
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atc)
 
@@ -62,8 +62,8 @@ func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetails, error)
 
 	rtc := jwt.MapClaims{}
 
-	rtc["user_id"] = token.UserId
-	rtc["exp"] = td.RefreshTokenExpireTime
+	rtc[constants.UserIdKey] = token.UserId
+	rtc[constants.ExpireTimeKey] = td.RefreshTokenExpireTime
 
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtc)
 

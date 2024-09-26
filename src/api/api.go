@@ -50,6 +50,9 @@ func RegisterRoutes(r *gin.Engine, cfg *config.Config) {
 	{
 
 		health := v1.Group("/health")
+		test_router := v1.Group("/test" /*middlewares.Authentication(cfg), middlewares.Authorization([]string{"admin"})*/)
+		routers.Health(test_router)
+
 		routers.Health(health)
 
 		healthById := v1.Group("/health-by-id")
