@@ -2,6 +2,9 @@ package middlewares
 
 import (
 	"fmt"
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"github.com/omidhaqi/clean-web-api/api/helper"
@@ -9,17 +12,13 @@ import (
 	"github.com/omidhaqi/clean-web-api/constants"
 	"github.com/omidhaqi/clean-web-api/pkg/service_errors"
 	"github.com/omidhaqi/clean-web-api/services"
-	"net/http"
-	"strings"
 )
 
 func Authentication(cfg *config.Config) gin.HandlerFunc {
 	var tokenService = services.NewTokenService(cfg)
 
 	return func(c *gin.Context) {
-
 		var err error
-
 		claimMap := map[string]interface{}{}
 		auth := c.GetHeader(constants.AuthorizationHeaderKey)
 		token := strings.Split(auth, " ")
@@ -42,6 +41,7 @@ func Authentication(cfg *config.Config) gin.HandlerFunc {
 			))
 			return
 		}
+
 		c.Set(constants.UserIdKey, claimMap[constants.UserIdKey])
 		c.Set(constants.FirstNameKey, claimMap[constants.FirstNameKey])
 		c.Set(constants.LastNameKey, claimMap[constants.LastNameKey])
@@ -50,9 +50,14 @@ func Authentication(cfg *config.Config) gin.HandlerFunc {
 		c.Set(constants.MobileNumberKey, claimMap[constants.MobileNumberKey])
 		c.Set(constants.RolesKey, claimMap[constants.RolesKey])
 		c.Set(constants.ExpireTimeKey, claimMap[constants.ExpireTimeKey])
+
 		c.Next()
+
+		fmt.Println("ClaimMap:", claimMap)
+		fmt.Println("Context Keys after Authentication:", c.Keys)
 	}
 }
+
 func Authorization(validRoles []string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if len(c.Keys) == 0 {
@@ -70,6 +75,7 @@ func Authorization(validRoles []string) gin.HandlerFunc {
 		for _, item := range roles {
 			val[item.(string)] = 0
 		}
+
 		for _, item := range validRoles {
 			if _, ok := val[item]; ok {
 				c.Next()

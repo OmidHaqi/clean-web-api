@@ -2,8 +2,6 @@ package logging
 
 import "github.com/omidhaqi/clean-web-api/config"
 
-
-
 type Logger interface {
 	Init()
 
@@ -32,5 +30,4 @@ func NewLogger(cfg *config.Config) Logger {
 	panic("logger not supported")
 }
 
-//file <- fileBeat -> elasticSearch -> kibana
- 
+// file <- filebeat -> elasticsearch -> kibana

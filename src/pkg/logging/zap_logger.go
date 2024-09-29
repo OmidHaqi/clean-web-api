@@ -1,10 +1,6 @@
 package logging
 
 import (
-	"fmt"
-	"time"
-
-	"github.com/google/uuid"
 	"github.com/omidhaqi/clean-web-api/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -12,6 +8,7 @@ import (
 )
 
 var zapSinLogger *zap.SugaredLogger
+
 type zapLogger struct {
 	cfg    *config.Config
 	logger *zap.SugaredLogger
@@ -41,9 +38,8 @@ func (l *zapLogger) getLogLevel() zapcore.Level {
 
 func (l *zapLogger) Init() {
 	once.Do(func() {
-		fileName := fmt.Sprintf("%s%s-%s.%s",l.cfg.Logger.FilePath,time.Now().Format("2006-01-02"),uuid.New(),"log")
 		w := zapcore.AddSync(&lumberjack.Logger{
-			Filename:   fileName,
+			Filename:   l.cfg.Logger.FilePath,
 			MaxSize:    1,
 			MaxAge:     20,
 			LocalTime:  true,

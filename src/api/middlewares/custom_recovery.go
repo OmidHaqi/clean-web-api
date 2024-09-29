@@ -1,12 +1,15 @@
 package middlewares
+
 import (
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/omidhaqi/clean-web-api/api/helper"
 )
+
 func ErrorHandler(c *gin.Context, err any) {
 	if err, ok := err.(error); ok {
-		httpResponse := helper.GenerateBaseResponseWithError(nil, false, -500,err)
+		httpResponse := helper.GenerateBaseResponseWithError(nil, false, -500, err.(error))
 		c.AbortWithStatusJSON(http.StatusInternalServerError, httpResponse)
 		return
 	}

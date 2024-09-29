@@ -5,7 +5,7 @@ import (
 
 	"github.com/didip/tollbooth"
 	"github.com/gin-gonic/gin"
-	 "github.com/omidhaqi/clean-web-api/api/helper"
+	"github.com/omidhaqi/clean-web-api/api/helper"
 )
 
 func LimitByRequest() gin.HandlerFunc {
@@ -14,7 +14,7 @@ func LimitByRequest() gin.HandlerFunc {
 		err := tollbooth.LimitByRequest(lmt, c.Writer, c.Request)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusTooManyRequests,
-				helper.GenerateBaseResponseWithError(nil, false, helper.LimiterError, err))
+				helper.GenerateBaseResponseWithError(nil, false, -100, err))
 			return
 		} else {
 			c.Next()

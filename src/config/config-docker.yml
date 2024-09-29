@@ -1,12 +1,11 @@
 server:
-  internalPort: 5000
-  externalPort: 0
-  runMode: release
+  port: 5005
+  runMode: debug
 logger:
-  filePath: /app/logs/
+  filePath: ../logs/logs.log
   encoding: json
   level: debug
-  logger: zerolog
+  logger: zap
 cors:
   allowOrigins: "*"
 postgres:
@@ -37,7 +36,6 @@ password:
   maxLength: 64
   includeUppercase: true
   includeLowercase: true
-  includeSymbols: true
 otp:
   expireTime: 120
   digits: 6

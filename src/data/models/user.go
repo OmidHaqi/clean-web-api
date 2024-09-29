@@ -1,15 +1,5 @@
 package models
 
-/***
-user -> n roles
-role -> n users
-
-n users <-> n roles
-
-user 
-use_role -> user_id , role_id , ... 
-*/
-
 type User struct {
 	BaseModel
 	Username     string `gorm:"type:string;size:20;not null;unique"`
@@ -35,3 +25,15 @@ type UserRole struct {
 	UserId int
 	RoleId int
 }
+
+/*
+user -> n roles
+role -> n users
+
+users n <-> n roles
+
+user
+user_role -> user_id, role_id, ....
+role
+
+*/

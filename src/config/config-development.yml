@@ -1,12 +1,11 @@
 server:
-  internalPort: 5005
-  externalPort: 5005
-  runMode: debug
+  Port: 5005
+  RunMode: debug
 logger:
-  filePath: ../logs/
-  encoding: json
+  filePath: ../logs/logs.log
+  Encoding: json
   level: debug
-  logger: zerolog
+  logger: zap
 cors:
   allowOrigins: "*"
 postgres:

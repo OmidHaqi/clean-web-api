@@ -1,13 +1,13 @@
 package constants
 
 const (
-	AdminRoleName       string = "admin"
-	DefaultRoleName     string = "default"
-	DefaultRoleUserName string = "admin"
-
+	// User
+	AdminRoleName      string = "admin"
+	DefaultRoleName    string = "default"
+	DefaultUserName    string = "admin"
 	RedisOtpDefaultKey string = "otp"
 
-	
+	// Claims
 	AuthorizationHeaderKey string = "Authorization"
 	UserIdKey              string = "UserId"
 	FirstNameKey           string = "FirstName"

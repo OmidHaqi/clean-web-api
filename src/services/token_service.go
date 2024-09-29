@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -20,7 +21,7 @@ type tokenDto struct {
 	UserId       int
 	FirstName    string
 	LastName     string
-	UserName     string
+	Username     string
 	MobileNumber string
 	Email        string
 	Roles        []string
@@ -34,18 +35,17 @@ func NewTokenService(cfg *config.Config) *TokenService {
 	}
 }
 
-func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetails, error) {
-
-	td := &dto.TokenDetails{}
-
+func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetail, error) {
+	td := &dto.TokenDetail{}
 	td.AccessTokenExpireTime = time.Now().Add(s.cfg.JWT.AccessTokenExpireDuration * time.Minute).Unix()
 	td.RefreshTokenExpireTime = time.Now().Add(s.cfg.JWT.RefreshTokenExpireDuration * time.Minute).Unix()
 
 	atc := jwt.MapClaims{}
+
 	atc[constants.UserIdKey] = token.UserId
 	atc[constants.FirstNameKey] = token.FirstName
 	atc[constants.LastNameKey] = token.LastName
-	atc[constants.UsernameKey] = token.UserName
+	atc[constants.UsernameKey] = token.Username
 	atc[constants.EmailKey] = token.Email
 	atc[constants.MobileNumberKey] = token.MobileNumber
 	atc[constants.RolesKey] = token.Roles
@@ -73,17 +73,20 @@ func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetails, error)
 		return nil, err
 	}
 
-	return td, nil
+	fmt.Println("Roles in Token:", token.Roles)
+	fmt.Println("Username in Token:", token.Username)
+	fmt.Println("Email in Token:", token.Email)
+	fmt.Println("MobileNumber in Token:", token.MobileNumber)
+	fmt.Println("UserId in Token:", token.UserId)
 
+	return td, nil
 }
 
 func (s *TokenService) VerifyToken(token string) (*jwt.Token, error) {
-	at, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
-		_, ok := t.Method.(*jwt.SigningMethodHMAC)
-
+	at, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
 			return nil, &service_errors.ServiceError{EndUserMessage: service_errors.UnExpectedError}
-
 		}
 		return []byte(s.cfg.JWT.Secret), nil
 	})
@@ -92,7 +95,6 @@ func (s *TokenService) VerifyToken(token string) (*jwt.Token, error) {
 	}
 	return at, nil
 }
-
 
 func (s *TokenService) GetClaims(token string) (claimMap map[string]interface{}, err error) {
 	claimMap = map[string]interface{}{}

@@ -9,15 +9,13 @@ const (
 	TokenInvalid    = "token invalid"
 
 	// OTP
-	OtpExists   = "Otp exists"
+	OptExists   = "Otp exists"
 	OtpUsed     = "Otp used"
 	OtpNotValid = "Otp invalid"
 
 	// User
-	EmailExists               = "Email exists"
-	UsernameExists            = "Username exists"
-	PermissionDenied          = "Permission denied"
-	UsernameOrPasswordInvalid = "username or password invalid"
+	EmailExists    = "Email exists"
+	UsernameExists = "Username exists"
 
 	// DB
 	RecordNotFound = "record not found"

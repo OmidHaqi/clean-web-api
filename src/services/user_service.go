@@ -5,8 +5,8 @@ import (
 	"github.com/omidhaqi/clean-web-api/common"
 	"github.com/omidhaqi/clean-web-api/config"
 	"github.com/omidhaqi/clean-web-api/constants"
+	"github.com/omidhaqi/clean-web-api/data/db"
 	"github.com/omidhaqi/clean-web-api/data/models"
-	"github.com/omidhaqi/clean-web-api/infra/persistence/database"
 	"github.com/omidhaqi/clean-web-api/pkg/logging"
 	"github.com/omidhaqi/clean-web-api/pkg/service_errors"
 	"golang.org/x/crypto/bcrypt"
@@ -22,7 +22,7 @@ type UserService struct {
 }
 
 func NewUserService(cfg *config.Config) *UserService {
-	database := database.GetDb()
+	database := db.GetDb()
 	logger := logging.NewLogger(cfg)
 	return &UserService{
 		cfg:          cfg,
@@ -34,7 +34,7 @@ func NewUserService(cfg *config.Config) *UserService {
 }
 
 // Login by username
-func (s *UserService) LoginByUsername(req *dto.LoginByUsernameRequest) (*dto.TokenDetails, error) {
+func (s *UserService) LoginByUsername(req *dto.LoginByUsernameRequest) (*dto.TokenDetail, error) {
 	var user models.User
 	err := s.database.
 		Model(&models.User{}).
@@ -52,21 +52,25 @@ func (s *UserService) LoginByUsername(req *dto.LoginByUsernameRequest) (*dto.Tok
 	}
 	tdto := tokenDto{UserId: user.Id, FirstName: user.FirstName, LastName: user.LastName,
 		Email: user.Email, MobileNumber: user.MobileNumber}
+
 	if len(*user.UserRoles) > 0 {
 		for _, ur := range *user.UserRoles {
 			tdto.Roles = append(tdto.Roles, ur.Role.Name)
 		}
 	}
+
 	token, err := s.tokenService.GenerateToken(&tdto)
 	if err != nil {
 		return nil, err
 	}
 	return token, nil
+
 }
 
 // Register by username
 func (s *UserService) RegisterByUsername(req *dto.RegisterUserByUsernameRequest) error {
 	u := models.User{Username: req.Username, FirstName: req.FirstName, LastName: req.LastName, Email: req.Email}
+
 	exists, err := s.existsByEmail(req.Email)
 	if err != nil {
 		return err
@@ -81,6 +85,7 @@ func (s *UserService) RegisterByUsername(req *dto.RegisterUserByUsernameRequest)
 	if exists {
 		return &service_errors.ServiceError{EndUserMessage: service_errors.UsernameExists}
 	}
+
 	bp := []byte(req.Password)
 	hp, err := bcrypt.GenerateFromPassword(bp, bcrypt.DefaultCost)
 	if err != nil {
@@ -93,6 +98,7 @@ func (s *UserService) RegisterByUsername(req *dto.RegisterUserByUsernameRequest)
 		s.logger.Error(logging.Postgres, logging.DefaultRoleNotFound, err.Error(), nil)
 		return err
 	}
+
 	tx := s.database.Begin()
 	err = tx.Create(&u).Error
 	if err != nil {
@@ -108,10 +114,11 @@ func (s *UserService) RegisterByUsername(req *dto.RegisterUserByUsernameRequest)
 	}
 	tx.Commit()
 	return nil
+
 }
 
 // Register/login by mobile number
-func (s *UserService) RegisterLoginByMobileNumber(req *dto.RegisterLoginByMobileRequest) (*dto.TokenDetails, error) {
+func (s *UserService) RegisterLoginByMobileNumber(req *dto.RegisterLoginByMobileRequest) (*dto.TokenDetail, error) {
 	err := s.otpService.ValidateOtp(req.MobileNumber, req.Otp)
 	if err != nil {
 		return nil, err
@@ -120,7 +127,9 @@ func (s *UserService) RegisterLoginByMobileNumber(req *dto.RegisterLoginByMobile
 	if err != nil {
 		return nil, err
 	}
+
 	u := models.User{MobileNumber: req.MobileNumber, Username: req.MobileNumber}
+
 	if exists {
 		var user models.User
 		err = s.database.
@@ -135,17 +144,21 @@ func (s *UserService) RegisterLoginByMobileNumber(req *dto.RegisterLoginByMobile
 		}
 		tdto := tokenDto{UserId: user.Id, FirstName: user.FirstName, LastName: user.LastName,
 			Email: user.Email, MobileNumber: user.MobileNumber}
+
 		if len(*user.UserRoles) > 0 {
 			for _, ur := range *user.UserRoles {
 				tdto.Roles = append(tdto.Roles, ur.Role.Name)
 			}
 		}
+
 		token, err := s.tokenService.GenerateToken(&tdto)
 		if err != nil {
 			return nil, err
 		}
 		return token, nil
+
 	}
+
 	bp := []byte(common.GeneratePassword())
 	hp, err := bcrypt.GenerateFromPassword(bp, bcrypt.DefaultCost)
 	if err != nil {
@@ -158,6 +171,7 @@ func (s *UserService) RegisterLoginByMobileNumber(req *dto.RegisterLoginByMobile
 		s.logger.Error(logging.Postgres, logging.DefaultRoleNotFound, err.Error(), nil)
 		return nil, err
 	}
+
 	tx := s.database.Begin()
 	err = tx.Create(&u).Error
 	if err != nil {
@@ -172,6 +186,7 @@ func (s *UserService) RegisterLoginByMobileNumber(req *dto.RegisterLoginByMobile
 		return nil, err
 	}
 	tx.Commit()
+
 	var user models.User
 	err = s.database.
 		Model(&models.User{}).
@@ -185,27 +200,28 @@ func (s *UserService) RegisterLoginByMobileNumber(req *dto.RegisterLoginByMobile
 	}
 	tdto := tokenDto{UserId: user.Id, FirstName: user.FirstName, LastName: user.LastName,
 		Email: user.Email, MobileNumber: user.MobileNumber}
+
 	if len(*user.UserRoles) > 0 {
 		for _, ur := range *user.UserRoles {
 			tdto.Roles = append(tdto.Roles, ur.Role.Name)
 		}
 	}
+
 	token, err := s.tokenService.GenerateToken(&tdto)
 	if err != nil {
 		return nil, err
 	}
 	return token, nil
+
 }
 
 func (s *UserService) SendOtp(req *dto.GetOtpRequest) error {
-
 	otp := common.GenerateOtp()
 	err := s.otpService.SetOtp(req.MobileNumber, otp)
 	if err != nil {
 		return err
 	}
 	return nil
-
 }
 
 func (s *UserService) existsByEmail(email string) (bool, error) {

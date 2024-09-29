@@ -7,11 +7,11 @@ import (
 	"github.com/omidhaqi/clean-web-api/config"
 )
 
-func User(routers *gin.RouterGroup,cfg *config.Config)  {
-	var h = handlers.NewUserHandler(cfg)
-	
-	routers.POST("/send-otp", middlewares.OtpLimiter(cfg), h.SendOtp)
-	routers.POST("/login-by-username", h.LoginByUsername)
-	routers.POST("/register-by-username", h.RegisterByUsername)
-	routers.POST("/login-by-mobile", h.RegisterLoginByMobileNumber)
+func User(router *gin.RouterGroup, cfg *config.Config) {
+	h := handlers.NewUsersHandler(cfg)
+
+	router.POST("/send-otp", middlewares.OtpLimiter(cfg), h.SendOtp)
+	router.POST("/login-by-username", h.LoginByUsername)
+	router.POST("/register-by-username", h.RegisterByUsername)
+	router.POST("/login-by-mobile", h.RegisterLoginByMobileNumber)
 }

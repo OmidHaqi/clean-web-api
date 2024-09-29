@@ -6,13 +6,11 @@ type ExtraKey string
 
 const (
 	General         Category = "General"
-	IO              Category = "IO"
 	Internal        Category = "Internal"
 	Postgres        Category = "Postgres"
 	Redis           Category = "Redis"
 	Validation      Category = "Validation"
 	RequestResponse Category = "RequestResponse"
-	Prometheus      Category = "Prometheus"
 )
 
 const (
@@ -32,14 +30,10 @@ const (
 	Api                 SubCategory = "Api"
 	HashPassword        SubCategory = "HashPassword"
 	DefaultRoleNotFound SubCategory = "DefaultRoleNotFound"
-	FailedToCreateUser  SubCategory = "FailedToCreateUser"
 
 	// Validation
 	MobileValidation   SubCategory = "MobileValidation"
 	PasswordValidation SubCategory = "PasswordValidation"
-
-	// IO
-	RemoveFile SubCategory = "RemoveFile"
 )
 
 const (
