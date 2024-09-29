@@ -1,4 +1,20 @@
 definitions:
+  dto.CountryResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.CreateUpdateCountryRequest:
+    properties:
+      name:
+        maxLength: 20
+        minLength: 3
+        type: string
+    required:
+    - name
+    type: object
   dto.GetOtpRequest:
     properties:
       mobileNumber:
@@ -14,7 +30,7 @@ definitions:
         minLength: 6
         type: string
       username:
-        minLength: 6
+        minLength: 5
         type: string
     required:
     - password
@@ -57,12 +73,31 @@ definitions:
     - password
     - username
     type: object
+  handlers.personData:
+    properties:
+      first_name:
+        maxLength: 10
+        minLength: 4
+        type: string
+      last_name:
+        maxLength: 20
+        minLength: 6
+        type: string
+      mobile_number:
+        maxLength: 11
+        minLength: 11
+        type: string
+    required:
+    - first_name
+    - last_name
+    - mobile_number
+    type: object
   helper.BaseHttpResponse:
     properties:
       error: {}
       result: {}
       resultCode:
-        $ref: '#/definitions/helper.ResultCode'
+        type: integer
       success:
         type: boolean
       validationErrors:
@@ -70,28 +105,6 @@ definitions:
           $ref: '#/definitions/validation.ValidationError'
         type: array
     type: object
-  helper.ResultCode:
-    enum:
-    - 0
-    - 40001
-    - 40101
-    - 40301
-    - 40401
-    - 42901
-    - 42902
-    - 50001
-    - 50002
-    type: integer
-    x-enum-varnames:
-    - Success
-    - ValidationError
-    - AuthError
-    - ForbiddenError
-    - NotFoundError
-    - LimiterError
-    - OtpLimiterError
-    - CustomRecovery
-    - InternalError
   validation.ValidationError:
     properties:
       message:
@@ -106,11 +119,131 @@ definitions:
 info:
   contact: {}
 paths:
-  /v1/health:
+  /v1/countries/:
+    post:
+      consumes:
+      - application/json
+      description: Create a country
+      parameters:
+      - description: Create a country
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUpdateCountryRequest'
+      responses:
+        "201":
+          description: Country response
+          schema:
+            allOf:
+            - $ref: '#/definitions/helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/dto.CountryResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a country
+      tags:
+      - Countries
+  /v1/countries/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a country
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "201":
+          description: response
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Delete a country
+      tags:
+      - Countries
     get:
       consumes:
       - application/json
-      description: Check the server status
+      description: Get a country
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Country response
+          schema:
+            allOf:
+            - $ref: '#/definitions/helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/dto.CountryResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a country
+      tags:
+      - Countries
+    put:
+      consumes:
+      - application/json
+      description: Update a country
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update a country
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUpdateCountryRequest'
+      responses:
+        "201":
+          description: Country response
+          schema:
+            allOf:
+            - $ref: '#/definitions/helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/dto.CountryResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a country
+      tags:
+      - Countries
+  /v1/health/:
+    get:
+      consumes:
+      - application/json
+      description: Health Check
       produces:
       - application/json
       responses:
@@ -124,7 +257,102 @@ paths:
             $ref: '#/definitions/helper.BaseHttpResponse'
       summary: Health Check
       tags:
-      - Health
+      - health
+  /v1/test/binder/body:
+    post:
+      consumes:
+      - application/json
+      description: BodyBinder
+      parameters:
+      - description: person data
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.personData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/helper.BaseHttpResponse'
+            - properties:
+                validationErrors:
+                  type: object
+              type: object
+        "400":
+          description: Failed
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: BodyBinder
+      tags:
+      - Test
+  /v1/test/binder/uri/{id}/{name}:
+    post:
+      consumes:
+      - application/json
+      description: BodyBinder
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: user name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/helper.BaseHttpResponse'
+            - properties:
+                validationErrors:
+                  type: object
+              type: object
+        "400":
+          description: Failed
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: BodyBinder
+      tags:
+      - Test
+  /v1/test/user/{id}:
+    get:
+      consumes:
+      - application/json
+      description: UserById
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+        "400":
+          description: Failed
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+      summary: UserById
+      tags:
+      - Test
   /v1/users/login-by-mobile:
     post:
       consumes:
@@ -219,7 +447,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Send OTP to user
+      description: Send otp to user
       parameters:
       - description: GetOtpRequest
         in: body
@@ -234,40 +462,19 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/helper.BaseHttpResponse'
-        "409":
-          description: Failed
-          schema:
-            $ref: '#/definitions/helper.BaseHttpResponse'
-      summary: Send OTP to user
-      tags:
-      - Users
-  /v2/test/user/{id}:
-    post:
-      consumes:
-      - application/json
-      description: Check the server status
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: '#/definitions/helper.BaseHttpResponse'
         "400":
           description: Failed
           schema:
             $ref: '#/definitions/helper.BaseHttpResponse'
-      summary: UserByID
+        "409":
+          description: Failed
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+      summary: Send otp to user
       tags:
-      - Test
+      - Users
 securityDefinitions:
-  ApiKeyAuth:
+  AuthBearer:
     in: header
     name: Authorization
     type: apiKey
