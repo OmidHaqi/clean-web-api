@@ -25,7 +25,10 @@ go.work.sum
 .env
 
 #Log file
-.log
+*.log
+*.log.gz
+
+__debug_bin*
 
 # vscode folder
 .vscode/
