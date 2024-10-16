@@ -30,6 +30,8 @@ go.work.sum
 
 __debug_bin*
 
+*/cmd/uploads
+
 # vscode folder
 #.vscode/
 
