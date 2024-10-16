@@ -59,6 +59,19 @@ definitions:
     required:
     - name
     type: object
+  github_com_omidhaqi_clean-web-api_api_dto.FileResponse:
+    properties:
+      description:
+        type: string
+      directory:
+        type: string
+      id:
+        type: integer
+      mimeType:
+        type: string
+      name:
+        type: string
+    type: object
   github_com_omidhaqi_clean-web-api_api_dto.Filter:
     properties:
       filterType:
@@ -128,6 +141,23 @@ definitions:
       totalRows:
         type: integer
     type: object
+  github_com_omidhaqi_clean-web-api_api_dto.PagedList-github_com_omidhaqi_clean-web-api_api_dto_FileResponse:
+    properties:
+      hasNextPage:
+        type: boolean
+      hasPreviousPage:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_dto.FileResponse'
+        type: array
+      pageNumber:
+        type: integer
+      totalPages:
+        type: integer
+      totalRows:
+        type: integer
+    type: object
   github_com_omidhaqi_clean-web-api_api_dto.PaginationInputWithFilter:
     properties:
       filter:
@@ -187,6 +217,11 @@ definitions:
       sort:
         type: string
     type: object
+  github_com_omidhaqi_clean-web-api_api_dto.UpdateFileRequest:
+    properties:
+      description:
+        type: string
+    type: object
   github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse:
     properties:
       error: {}
@@ -210,6 +245,21 @@ definitions:
         type: string
       value:
         type: string
+    type: object
+  multipart.FileHeader:
+    properties:
+      filename:
+        type: string
+      header:
+        $ref: '#/definitions/textproto.MIMEHeader'
+      size:
+        type: integer
+    type: object
+  textproto.MIMEHeader:
+    additionalProperties:
+      items:
+        type: string
+      type: array
     type: object
 info:
   contact: {}
@@ -528,6 +578,160 @@ paths:
       summary: Get Countries
       tags:
       - Countries
+  /v1/files/:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Create a file
+      parameters:
+      - in: formData
+        name: description
+        required: true
+        type: string
+      - description: Create a file
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses:
+        "201":
+          description: File response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_dto.FileResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Create a file
+      tags:
+      - Files
+  /v1/files/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a file
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: response
+          schema:
+            $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Delete a file
+      tags:
+      - Files
+    get:
+      consumes:
+      - application/json
+      description: Get a file
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: File response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_dto.FileResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get a file
+      tags:
+      - Files
+    put:
+      consumes:
+      - application/json
+      description: Update a file
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update a file
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_dto.UpdateFileRequest'
+      responses:
+        "200":
+          description: File response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_dto.FileResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Update a file
+      tags:
+      - Files
+  /v1/files/get-by-filter:
+    post:
+      consumes:
+      - application/json
+      description: Get Files
+      parameters:
+      - description: Request
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_dto.PaginationInputWithFilter'
+      responses:
+        "200":
+          description: File response
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_dto.PagedList-github_com_omidhaqi_clean-web-api_api_dto_FileResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
+      security:
+      - AuthBearer: []
+      summary: Get Files
+      tags:
+      - Files
   /v1/health/:
     get:
       consumes:
