@@ -1416,9 +1416,7 @@
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "validationErrors": {
-                                            "type": "object"
-                                        }
+                                        "validationErrors": {}
                                     }
                                 }
                             ]
@@ -1478,9 +1476,7 @@
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "validationErrors": {
-                                            "type": "object"
-                                        }
+                                        "validationErrors": {}
                                     }
                                 }
                             ]

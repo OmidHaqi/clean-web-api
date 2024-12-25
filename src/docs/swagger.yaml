@@ -1246,8 +1246,7 @@ paths:
             allOf:
             - $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
             - properties:
-                validationErrors:
-                  type: object
+                validationErrors: {}
               type: object
         "400":
           description: Failed
@@ -1283,8 +1282,7 @@ paths:
             allOf:
             - $ref: '#/definitions/github_com_omidhaqi_clean-web-api_api_helper.BaseHttpResponse'
             - properties:
-                validationErrors:
-                  type: object
+                validationErrors: {}
               type: object
         "400":
           description: Failed

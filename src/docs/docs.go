@@ -1427,9 +1427,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "validationErrors": {
-                                            "type": "object"
-                                        }
+                                        "validationErrors": {}
                                     }
                                 }
                             ]
@@ -1489,9 +1487,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "validationErrors": {
-                                            "type": "object"
-                                        }
+                                        "validationErrors": {}
                                     }
                                 }
                             ]
