@@ -1,12 +1,12 @@
-package routers
+package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/omidhaqi/clean-web-api/api/handlers"
+	"github.com/omidhaqi/clean-web-api/api/handler"
 )
 
 func TestRouter(r *gin.RouterGroup) {
-	h := handlers.NewTestHandler()
+	h := handler.NewTestHandler()
 
 	r.GET("/", h.Test)
 	r.GET("/users", h.Users)

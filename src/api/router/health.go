@@ -1,12 +1,12 @@
-package routers
+package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/omidhaqi/clean-web-api/api/handlers"
+	"github.com/omidhaqi/clean-web-api/api/handler"
 )
 
 func Health(r *gin.RouterGroup) {
-	handler := handlers.NewHealthHandler()
+	handler := handler.NewHealthHandler()
 
 	r.GET("/", handler.Health)
 }
