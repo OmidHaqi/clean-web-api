@@ -17,7 +17,7 @@ route:
 receivers:
   - name: "email-notifications"
     email_configs:
-      - to: h.naimaei@gmail.com
+      - to: omid.haqi@outlook.com
         from: yourmail@gmail.com
         smarthost: smtp.gmail.com:587
         auth_username: yourmail@gmail.com
