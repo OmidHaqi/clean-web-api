@@ -1,5 +1,7 @@
 package helper
+
 type ResultCode int
+
 const (
 	Success         ResultCode = 0
 	ValidationError ResultCode = 40001

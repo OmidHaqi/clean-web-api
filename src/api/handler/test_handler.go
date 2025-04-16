@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"net/http"
@@ -187,7 +187,7 @@ func (h *TestHandler) FileBinder(c *gin.Context) {
 	err := c.SaveUploadedFile(file, "file")
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError,
-			helper.GenerateBaseResponseWithError(nil, false,helper.ValidationError, err))
+			helper.GenerateBaseResponseWithError(nil, false, helper.ValidationError, err))
 		return
 	}
 	c.JSON(http.StatusOK, helper.GenerateBaseResponse(gin.H{
