@@ -1,4 +1,4 @@
-FROM golang:1.19-buster AS builder
+FROM golang:1.23.0-bookworm AS builder
 
 WORKDIR /app
 
@@ -21,4 +21,3 @@ ENV APP_ENV docker
 ENV PORT ${Port}
 
 CMD [ "/app/server" ]
- 

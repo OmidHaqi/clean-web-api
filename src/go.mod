@@ -1,6 +1,6 @@
 module github.com/omidhaqi/clean-web-api
 
-go 1.23.0
+go 1.23
 
 require (
 	github.com/didip/tollbooth v4.0.2+incompatible

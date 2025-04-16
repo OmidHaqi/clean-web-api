@@ -1,4 +1,3 @@
----
 ## Default Elasticsearch configuration from Elasticsearch base image.
 ## https://github.com/elastic/elasticsearch/blob/main/distribution/docker/src/docker/config/elasticsearch.yml
 #

@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   ####################### SETUP #######################
   setup:
@@ -163,7 +161,7 @@ services:
       - --collector.filesystem.ignored-mount-points
       - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
     ports:
-      - 9100:9100
+      - 9101:9100  # Changed from 9100:9100 to 9101:9100 to avoid port conflict
     networks:
       - webapi_network
     restart: always

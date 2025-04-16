@@ -67,4 +67,4 @@ scrape_configs:
     metrics_path: /metrics
     scheme: http
     static_configs:
-      - targets: ["node-exporter:9100"]
+      - targets: ["node-exporter:9100"]  # This is correct as it uses the container name and internal port
