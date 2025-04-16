@@ -1,64 +1,119 @@
-# Golang Clean Web API (Dockerize) with a full sample project (Car Sale project)
+# Golang Clean Web API (Dockerized)
 
-## System Design Diagram
+A complete sample project demonstrating a clean architecture approach for a car sales web API with Golang, featuring comprehensive logging, monitoring, and containerization.
+
+
+## Table of Contents
+
+- [System Architecture](#system-architecture)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+  - [Running Locally](#running-locally)
+  - [Running with Docker](#running-with-docker)
+- [API Examples](#api-examples)
+- [Monitoring and Observability](#monitoring-and-observability)
+- [Production Deployment](#production-deployment)
+- [Project Preview](#project-preview)
+- [Contributing](#contributing)
+- [Contact Information](#contact-information)
+
+## System Architecture
 
 <p align="center"><img src='/docs/files/system_diagram.png' alt='Golang Web API System Design Diagram' /></p>
 
-## Database Design Diagram
+## Database Design
 
-<p align="center"><img src='/docs/files/db_diagram.png' alt='Golang Web API System Design Diagram' /></p>
+<p align="center"><img src='/docs/files/db_diagram.png' alt='Golang Web API Database Design Diagram' /></p>
 
-## Give a Star! :star:
+## Technologies Used
 
-If you like this repo or found it helpful, please give it a star. Thanks!
+This project leverages a modern technology stack to achieve robust functionality:
 
-## Used Tools
+1. **Web Framework**: [Gin](https://github.com/gin-gonic/gin) - High-performance HTTP web framework
+2. **Authentication**: [JWT](https://github.com/golang-jwt/jwt) - Token-based authentication and authorization
+3. **Caching**: [Redis](https://github.com/redis/redis) - In-memory data structure store
+4. **Logging Stack**:
+   - [Elasticsearch](https://github.com/elastic/elasticsearch) - Log storage and indexing
+   - [Filebeat](https://github.com/elastic/beats) - Log shipping
+   - [Kibana](https://github.com/elastic/kibana) - Log visualization
+5. **Database**:
+   - [PostgreSQL](https://github.com/postgres/postgres) - Main database engine
+   - [PgAdmin](https://github.com/pgadmin-org/pgadmin4) - Database management tool
+   - [GORM](https://github.com/go-gorm/gorm) - ORM library
+6. **Monitoring**:
+   - [Prometheus](https://github.com/prometheus/prometheus) - Metrics collection
+   - [Grafana](https://github.com/grafana/grafana) - Metrics visualization
+   - [Alertmanager](https://github.com/prometheus/alertmanager) - Alert handling
+7. **Development Tools**:
+   - [Validator](https://github.com/go-playground/validator) - Input validation
+   - [Viper](https://github.com/spf13/viper) - Configuration management
+   - [Zap](https://github.com/uber-go/zap) & [Zerolog](https://github.com/rs/zerolog) - Structured logging
+   - [Swaggo](https://github.com/swaggo/swag) - API documentation
+8. **Containerization**: Docker & Docker Compose - Application packaging and deployment
 
-1. [Gin as web framework](https://github.com/gin-gonic/gin)
-2. [JWT for authentication and authorization](https://github.com/golang-jwt/jwt)
-3. [Redis for caching](https://github.com/redis/redis)
-4. [Elasticsearch for logging database](https://github.com/elastic/elasticsearch)
-5. [Beat for log shipping](https://github.com/elastic/beats)
-6. [Kibana as log viewer](https://github.com/elastic/kibana)
-7. [Postgresql as main database engine](https://github.com/postgres/postgres)
-8. [PgAdmin as database management tool](https://github.com/pgadmin-org/pgadmin4)
-9. [Prometheus for metric database](https://github.com/prometheus/prometheus)
-10. [Grafana for metric dashboards](https://github.com/grafana/grafana)
-11. [Validator for endpoint input Validation](https://github.com/go-playground/validator)
-12. [Viper for configurations](https://github.com/spf13/viper)
-13. [Zap for logging](https://github.com/uber-go/zap)
-14. [Zerolog for logging](https://github.com/rs/zerolog)
-15. [Gorm as ORM](https://github.com/go-gorm/gorm)
-16. [Swagger for documentation](https://github.com/swaggo/swag)
-17. Docker compose to run project with all dependencies in docker
+## Getting Started
 
-## How to run
+### Running Locally
 
-### Run on local system
+#### 1. Start Dependencies with Docker
 
-#### Start dependencies on docker
 ```bash 
 docker compose -f "docker/docker-compose.yml" up -d setup elasticsearch kibana filebeat postgres pgadmin redis prometheus node-exporter alertmanager grafana
 ```
 
-#### Install swagger and run app
+#### 2. Install Swagger and Run the Application
+
 ```bash
 cd src
 go install github.com/swaggo/swag/cmd/swag@latest
-cd src/cmd
+cd cmd
 go run main.go
 ```
 
-##### Address: [http://localhost:5005](http://localhost:5005)
+The API will be available at: [http://localhost:5005](http://localhost:5005)
 
-#### Stop
+#### 3. Stop Dependencies
+
 ```bash
 docker compose -f "docker/docker-compose.yml" down
 ```
 
-#### Examples
+### Running with Docker
 
-##### Login
+Deploy the entire application stack with a single command:
+
+```bash
+docker compose -f "docker/docker-compose.yml" up -d --build
+```
+
+#### Service Access Information
+
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| Web API | [http://localhost:9001](http://localhost:9001) | Username: `admin`<br>Password: `12345678` |
+| Kibana | [http://localhost:5601](http://localhost:5601) | Username: `elastic`<br>Password: `@aA123456` |
+| Prometheus | [http://localhost:9090](http://localhost:9090) | N/A |
+| Grafana | [http://localhost:3000](http://localhost:3000) | Username: `admin`<br>Password: `foobar` |
+| PgAdmin | [http://localhost:8090](http://localhost:8090) | Username: `omid.haqi@outlook.com`<br>Password: `123456` |
+
+**Postgres Connection Details**:
+- Host: `postgres_container`
+- Port: `5432`
+- Username: `postgres`
+- Password: `admin`
+
+#### Stopping Docker Services
+
+```bash
+docker compose -f 'docker/docker-compose.yml' --project-name 'docker' down
+```
+
+## API Examples
+
+### Authentication
+
+Login example:
+
 ```bash
 curl -X 'POST' \
   'http://localhost:5005/api/v1/users/login-by-username' \
@@ -70,9 +125,9 @@ curl -X 'POST' \
 }'
 ```
 
-##### Sample filters request body
+### Filtering and Sorting
 
-###### City filter and sort
+#### City Filter with Text Search
 
 ```json
 {
@@ -94,17 +149,16 @@ curl -X 'POST' \
 }
 ```
 
-
-###### City in range filter 
+#### City with Range Filter
 
 ```json
 {
   "filter": {
-    "Id": { // Column name
-      "filterType": "number", // number, text,...
+    "Id": {
+      "filterType": "number",
       "from": "1", 
       "to": "7", 
-      "type": "inRange" // contains, equals,...
+      "type": "inRange"
     } 
   },
   "pageNumber": 1,
@@ -118,74 +172,25 @@ curl -X 'POST' \
 }
 ```
 
-### Run project with dependencies on Docker
+## Production Deployment
+
+### Linux Deployment with Systemd
+
+1. **Build the Project**
 
 ```bash
-docker compose -f "docker/docker-compose.yml" up -d --build
+cd src
+go build -o ../prod/server ./cmd/main.go
+mkdir -p ../prod/config/ && cp config/config-production.yml ../prod/config/config-production.yml
 ```
 
-#### Web API  Run in docker  [http://localhost:9001](http://localhost:9001)
-
-```
-Token Url: http://localhost:9001/api/v1/users/login-by-username
-Username: admin
-Password: 12345678
-```
-
-#### Kibana  [http://localhost:5601](http://localhost:5601)
-
-```
-Username: elastic
-Password: @aA123456
-```
-
-#### Prometheus  [http://localhost:9090](http://localhost:9090)
-
-#### Grafana  [http://localhost:3000](http://localhost:3000)
-
-```
-Username: admin
-Password: foobar
-```
-
-#### PgAdmin  [http://localhost:8090](http://localhost:8090)
-
-```
-Username: omid.haqi@gmail.com
-Password: 123456
-```
-
-Postgres Server info:
-
-```
-Host: postgres_container
-Port: 5432
-Username: postgres
-Password: admin
-```
-
-### Docker Stop
-
-```bash
-docker compose -f 'docker/docker-compose.yml' --project-name 'docker' down
-```
-
-### Linux
-
-0. build Project and copy configuration
-
-```bash
-/src > go build -o ../prod/server ./cmd/main.go
-/src > mkdir ../prod/config/ && cp config/config-production.yml ../prod/config/config-production.yml
-```
-
-1. Create systemd unit
+2. **Create a Systemd Service Unit**
 
 ```bash
 sudo vi /lib/systemd/system/go-api.service
 ```
 
-2. Service config
+3. **Configure the Service**
 
 ```
 [Unit]
@@ -198,38 +203,55 @@ RestartSec=20s
 ExecStart=/home/umut/github/clean-web-api/prod/server
 Environment="APP_ENV=production"
 WorkingDirectory=/home/umut/github/clean-web-api/prod
+
 [Install]
 WantedBy=multi-user.target
 ```
 
-3. Start service
+4. **Start the Service**
 
 ```bash
 sudo systemctl start go-api
 ```
 
-4. Stop service
+5. **Stop the Service**
 
 ```bash
 sudo systemctl stop go-api
 ```
 
-5. Show service logs
+6. **View Service Logs**
 
 ```bash
 sudo journalctl -u go-api -e
 ```
 
-## Project preview
+## Project Preview
 
-## Swagger
+### Swagger
 
 <p align="center"><img src='/docs/files/swagger.png' alt='Golang Web API preview' /></p>
 
-## Grafana
+### Grafana
 
 <p align="center"><img src='/docs/files/grafana.png' alt='Golang Web API grafana dashboard' /></p>
 
-## Kibana
+### Kibana
 
 <p align="center"><img src='/docs/files/kibana.png' alt='Golang Web API grafana dashboard' /></p>
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit issues, fork the repository, and create pull requests.
+
+## Contact Information
+
+If you have any questions, suggestions, or feedback regarding this project, please feel free to reach out:
+
+- **Email**: omid.haqi.dev@gmail.com
+- **GitHub Issues**: Please use the [issue tracker](https://github.com/omidhaqi/clean-web-api/issues)
+- **LinkedIn**: [Omid Haqi](https://linkedin.com/in/Omid-haghi)
+- **Telegram**: [Umut](https://t.me/Omid_Haqi)
+
+For business inquiries or collaboration opportunities, please send an email to business@example.com.
+
