@@ -1,18 +1,17 @@
-package services
+package usecase
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/omidhaqi/clean-web-api/api/dto"
 	"github.com/omidhaqi/clean-web-api/config"
-	"github.com/omidhaqi/clean-web-api/constants"
+	"github.com/omidhaqi/clean-web-api/constant"
 	"github.com/omidhaqi/clean-web-api/pkg/logging"
 	"github.com/omidhaqi/clean-web-api/pkg/service_errors"
+	dto "github.com/omidhaqi/clean-web-api/usecase/dto"
 )
 
-type TokenService struct {
+type TokenUsecase struct {
 	logger logging.Logger
 	cfg    *config.Config
 }
@@ -27,29 +26,29 @@ type tokenDto struct {
 	Roles        []string
 }
 
-func NewTokenService(cfg *config.Config) *TokenService {
+func NewTokenUsecase(cfg *config.Config) *TokenUsecase {
 	logger := logging.NewLogger(cfg)
-	return &TokenService{
+	return &TokenUsecase{
 		cfg:    cfg,
 		logger: logger,
 	}
 }
 
-func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetail, error) {
+func (s *TokenUsecase) GenerateToken(token tokenDto) (*dto.TokenDetail, error) {
 	td := &dto.TokenDetail{}
 	td.AccessTokenExpireTime = time.Now().Add(s.cfg.JWT.AccessTokenExpireDuration * time.Minute).Unix()
 	td.RefreshTokenExpireTime = time.Now().Add(s.cfg.JWT.RefreshTokenExpireDuration * time.Minute).Unix()
 
 	atc := jwt.MapClaims{}
 
-	atc[constants.UserIdKey] = token.UserId
-	atc[constants.FirstNameKey] = token.FirstName
-	atc[constants.LastNameKey] = token.LastName
-	atc[constants.UsernameKey] = token.Username
-	atc[constants.EmailKey] = token.Email
-	atc[constants.MobileNumberKey] = token.MobileNumber
-	atc[constants.RolesKey] = token.Roles
-	atc[constants.ExpireTimeKey] = td.AccessTokenExpireTime
+	atc[constant.UserIdKey] = token.UserId
+	atc[constant.FirstNameKey] = token.FirstName
+	atc[constant.LastNameKey] = token.LastName
+	atc[constant.UsernameKey] = token.Username
+	atc[constant.EmailKey] = token.Email
+	atc[constant.MobileNumberKey] = token.MobileNumber
+	atc[constant.RolesKey] = token.Roles
+	atc[constant.ExpireTimeKey] = td.AccessTokenExpireTime
 
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atc)
 
@@ -62,8 +61,8 @@ func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetail, error) 
 
 	rtc := jwt.MapClaims{}
 
-	rtc[constants.UserIdKey] = token.UserId
-	rtc[constants.ExpireTimeKey] = td.RefreshTokenExpireTime
+	rtc[constant.UserIdKey] = token.UserId
+	rtc[constant.ExpireTimeKey] = td.RefreshTokenExpireTime
 
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtc)
 
@@ -73,16 +72,10 @@ func (s *TokenService) GenerateToken(token *tokenDto) (*dto.TokenDetail, error) 
 		return nil, err
 	}
 
-	fmt.Println("Roles in Token:", token.Roles)
-	fmt.Println("Username in Token:", token.Username)
-	fmt.Println("Email in Token:", token.Email)
-	fmt.Println("MobileNumber in Token:", token.MobileNumber)
-	fmt.Println("UserId in Token:", token.UserId)
-
 	return td, nil
 }
 
-func (s *TokenService) VerifyToken(token string) (*jwt.Token, error) {
+func (s *TokenUsecase) VerifyToken(token string) (*jwt.Token, error) {
 	at, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
@@ -96,7 +89,7 @@ func (s *TokenService) VerifyToken(token string) (*jwt.Token, error) {
 	return at, nil
 }
 
-func (s *TokenService) GetClaims(token string) (claimMap map[string]interface{}, err error) {
+func (s *TokenUsecase) GetClaims(token string) (claimMap map[string]interface{}, err error) {
 	claimMap = map[string]interface{}{}
 
 	verifyToken, err := s.VerifyToken(token)
