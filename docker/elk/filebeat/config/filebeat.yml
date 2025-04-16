@@ -11,7 +11,7 @@ filebeat.inputs:
       - "/app/*.log"
     fields:
       environment: Development
-    tags: ["umut"]
+    tags: ["gocourse"]
     multiline.pattern: "^{"
     multiline.negate: true
     multiline.match: after
