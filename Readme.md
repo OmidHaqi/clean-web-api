@@ -200,9 +200,9 @@ Description=go-api
 Type=simple
 Restart=always
 RestartSec=20s
-ExecStart=/home/umut/github/clean-web-api/prod/server
+ExecStart=/development/Project/go/clean-web-api/prod/server
 Environment="APP_ENV=production"
-WorkingDirectory=/home/umut/github/clean-web-api/prod
+WorkingDirectory=/development/Project/go/clean-web-api/prod
 
 [Install]
 WantedBy=multi-user.target
@@ -252,6 +252,3 @@ If you have any questions, suggestions, or feedback regarding this project, plea
 - **GitHub Issues**: Please use the [issue tracker](https://github.com/omidhaqi/clean-web-api/issues)
 - **LinkedIn**: [Omid Haqi](https://linkedin.com/in/Omid-haghi)
 - **Telegram**: [Umut](https://t.me/Omid_Haqi)
-
-For business inquiries or collaboration opportunities, please send an email to business@example.com.
-
