@@ -90,7 +90,7 @@ docker compose -f "docker/docker-compose.yml" up -d --build
 
 | Service | URL | Credentials |
 |---------|-----|-------------|
-| Web API | [http://localhost:9001](http://localhost:9001) | Username: `admin`<br>Password: `12345678` |
+| Web API | [http://localhost:9002](http://localhost:9001) | Username: `admin`<br>Password: `12345678` |
 | Kibana | [http://localhost:5601](http://localhost:5601) | Username: `elastic`<br>Password: `@aA123456` |
 | Prometheus | [http://localhost:9090](http://localhost:9090) | N/A |
 | Grafana | [http://localhost:3000](http://localhost:3000) | Username: `admin`<br>Password: `foobar` |
