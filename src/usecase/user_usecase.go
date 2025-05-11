@@ -13,6 +13,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+
 type UserUsecase struct {
 	logger       logging.Logger
 	cfg          *config.Config
